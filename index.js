@@ -26,6 +26,7 @@ async function run() {
     await client.connect();
 
     const productCollection = client.db("toy_smart").collection("products");
+    const blogCollection = client.db("toy_smart").collection("blogs");
 
     // products
     app.get("/products", async (req, res) => {
@@ -38,6 +39,19 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
+    });
+
+    // blogs
+    app.get("/blogs", async (req, res) => {
+      const blogs = await blogCollection.find().toArray();
+      res.send(blogs);
+    });
+
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const blog = await blogCollection.findOne(query);
+      res.send(blog);
     });
 
     // Send a ping to confirm a successful connection
