@@ -51,7 +51,10 @@ async function run() {
 
     // blogs
     app.get("/blogs", async (req, res) => {
-      const blogs = await blogCollection.find().toArray();
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 6;
+      const skip = page * limit;
+      const blogs = await blogCollection.find().skip(skip).limit(limit).toArray();
       res.send(blogs);
     });
 
@@ -60,6 +63,11 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const blog = await blogCollection.findOne(query);
       res.send(blog);
+    });
+
+    app.get("/totalBlogs", async (req, res) => {
+      const totalBlogs = await blogCollection.estimatedDocumentCount();
+      res.send({ totalBlogs: totalBlogs });
     });
 
     // Send a ping to confirm a successful connection
