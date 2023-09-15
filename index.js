@@ -33,20 +33,27 @@ async function run() {
       const page = parseInt(req.query.page) || 0;
       const limit = parseInt(req.query.limit) || 10;
       const skip = page * limit;
-      const products = await productCollection.find().skip(skip).limit(limit).toArray();
-      res.send(products);
+      const result = await productCollection.find().skip(skip).limit(limit).toArray();
+      res.send(result);
     });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const product = await productCollection.findOne(query);
-      res.send(product);
+      const result = await productCollection.findOne(query);
+      res.send(result);
     });
 
     app.get("/totalProducts", async (req, res) => {
-      const totalProducts = await productCollection.estimatedDocumentCount();
-      res.send({ totalProducts: totalProducts });
+      const result = await productCollection.estimatedDocumentCount();
+      res.send({ totalProducts: result });
+    });
+
+    app.get("/productsByCategory", async (req, res) => {
+      const category = req.query.category;
+      const query = { category };
+      const result = await productCollection.find(query).toArray();
+      res.send(result);
     });
 
     // blogs
@@ -54,20 +61,20 @@ async function run() {
       const page = parseInt(req.query.page) || 0;
       const limit = parseInt(req.query.limit) || 6;
       const skip = page * limit;
-      const blogs = await blogCollection.find().skip(skip).limit(limit).toArray();
-      res.send(blogs);
+      const result = await blogCollection.find().skip(skip).limit(limit).toArray();
+      res.send(result);
     });
 
     app.get("/blogs/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const blog = await blogCollection.findOne(query);
-      res.send(blog);
+      const result = await blogCollection.findOne(query);
+      res.send(result);
     });
 
     app.get("/totalBlogs", async (req, res) => {
-      const totalBlogs = await blogCollection.estimatedDocumentCount();
-      res.send({ totalBlogs: totalBlogs });
+      const result = await blogCollection.estimatedDocumentCount();
+      res.send({ totalBlogs: result });
     });
 
     // Send a ping to confirm a successful connection
