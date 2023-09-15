@@ -30,7 +30,10 @@ async function run() {
 
     // products
     app.get("/products", async (req, res) => {
-      const products = await productCollection.find().toArray();
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = page * limit;
+      const products = await productCollection.find().skip(skip).limit(limit).toArray();
       res.send(products);
     });
 
@@ -39,6 +42,11 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
+    });
+
+    app.get("/totalProducts", async (req, res) => {
+      const totalProducts = await productCollection.estimatedDocumentCount();
+      res.send({ totalProducts: totalProducts });
     });
 
     // blogs
