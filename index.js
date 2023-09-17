@@ -27,6 +27,7 @@ async function run() {
 
     const productCollection = client.db("toy_smart").collection("products");
     const blogCollection = client.db("toy_smart").collection("blogs");
+    const cartCollection = client.db("toy_smart").collection("cart");
 
     // products
     app.get("/products", async (req, res) => {
@@ -53,6 +54,18 @@ async function run() {
       const category = req.query.category;
       const query = { category };
       const result = await productCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // cart
+    app.get("/cart", async (req, res) => {
+      const result = await cartCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/cart", async (req, res) => {
+      const productInfo = req.body;
+      const result = await cartCollection.insertOne(productInfo);
       res.send(result);
     });
 
