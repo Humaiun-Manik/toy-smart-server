@@ -76,6 +76,11 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/cart", async (req, res) => {
+      const result = await cartCollection.deleteMany();
+      res.send(result);
+    });
+
     // blogs
     app.get("/blogs", async (req, res) => {
       const page = parseInt(req.query.page) || 0;
